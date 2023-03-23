@@ -36,10 +36,21 @@ class App extends Component {
 			);
 	}
 
+	onSearchChange = (event) => {
+		const searchField = event.target.value.toLocaleLowerCase();
+		this.setState(() => {
+			return { searchField: searchField }; //equal to searchField:searchField
+		});
+	};
+
 	//constructor runs first, then render, then mount, then render again because mount changed the state
 	render() {
-		const filteredMonsters = this.state.monsters.filter((monster) => {
-			return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+		//do this to avoid using this everwhere
+		const { monsters, searchField } = this.state;
+		const { onSearchChange } = this;
+
+		const filteredMonsters = monsters.filter((monster) => {
+			return monster.name.toLocaleLowerCase().includes(searchField);
 		});
 
 		return (
@@ -48,12 +59,7 @@ class App extends Component {
 					className="search-box"
 					type="search"
 					placeholder="search monsters"
-					onChange={(event) => {
-						const searchField = event.target.value.toLocaleLowerCase();
-						this.setState(() => {
-							return { searchField: searchField }; //equal to searchField:searchField
-						});
-					}}
+					onChange={onSearchChange}
 				/>
 				{filteredMonsters.map((monster) => {
 					//key value is something react uses to make it optimizedand quick. uses key value to associate changes
