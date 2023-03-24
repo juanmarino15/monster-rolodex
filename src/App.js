@@ -1,6 +1,8 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { Component } from "react"; //for class component
+import CardList from "./components/card-list/card-list.component";
+import SearchBox from "./components/search-box/search-box.component";
 
 //class component approach
 class App extends Component {
@@ -55,16 +57,12 @@ class App extends Component {
 
 		return (
 			<div className="App">
-				<input
-					className="search-box"
-					type="search"
+				<SearchBox
+					onChangeHandler={onSearchChange}
 					placeholder="search monsters"
-					onChange={onSearchChange}
+					className="search-box"
 				/>
-				{filteredMonsters.map((monster) => {
-					//key value is something react uses to make it optimizedand quick. uses key value to associate changes
-					return <h1 key={monster.id}>{monster.name}</h1>;
-				})}
+				<CardList monsters={filteredMonsters} />
 			</div>
 		);
 	}
