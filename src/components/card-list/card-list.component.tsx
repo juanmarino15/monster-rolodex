@@ -1,9 +1,14 @@
 import { Component } from "react";
 import "./card-list.styles.css";
 import Card from "../card/card.component";
+import { Monster } from "../../App";
+
+type CardListProps = {
+	monsters: Monster[];
+};
 
 //function appraoch, the destructoring can happen in the props section
-const CardList = ({ monsters }) => {
+const CardList = ({ monsters }: CardListProps) => {
 	return (
 		//mno return statement is implicit return
 		<div className="card-list">

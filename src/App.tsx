@@ -1,28 +1,45 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { Component } from "react"; //for class component
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import CardList from "./components/card-list/card-list.component";
 import SearchBox from "./components/search-box/search-box.component";
+import { getData } from "./utils/data.utils";
+
+//defining types
+export type Monster = {
+	id: string;
+	name: string;
+	email: string;
+};
 
 //*****************functional component approach****************
 const App = () => {
 	//props go in ()
 	//hooks. initializing the states
 	const [searchField, setSearchField] = useState(""); //[value,setValue]
-	const [monsters, setMonsters] = useState([]);
+	const [monsters, setMonsters] = useState<Monster[]>([]);
 	const [filteredMonsters, setFilterMonsters] = useState(monsters);
 	const [stringField, setStringField] = useState("");
 
 	//to avoid infinite re render
 	useEffect(() => {
-		fetch("https://jsonplaceholder.typicode.com/users") //getting the data from the API
-			.then(
-				(response) =>
-					//promise approach
-					response.json() //parsing the json into objects
-			)
-			.then((users) => setMonsters(users));
+		// fetch("https://jsonplaceholder.typicode.com/users") //getting the data from the API
+		// 	.then(
+		// 		(response) =>
+		// 			//promise approach
+		// 			response.json() //parsing the json into objects
+		// 	)
+		// 	.then((users) => setMonsters(users));
+
+		//telling getData that we will pass a Monster type array
+		const fetchUsers = async () => {
+			const users = await getData<Monster[]>(
+				"https://jsonplaceholder.typicode.com/users"
+			);
+
+			setMonsters(users);
+		};
+
+		fetchUsers();
 	}, []); //this will run only if the values in the dependency(array) have changed. empty means will only run once
 
 	useEffect(() => {
@@ -32,7 +49,7 @@ const App = () => {
 
 		setFilterMonsters(newFilteredMonsters);
 	}, [monsters, searchField]); //run the effect when array changes or search field changes
-	const onSearchChange = (event) => {
+	const onSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
 		const searchFieldString = event.target.value.toLocaleLowerCase();
 		setSearchField(searchFieldString);
 	};
